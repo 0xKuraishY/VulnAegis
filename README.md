@@ -117,6 +117,32 @@ to give the analyst an up-to-date view.
 | **Security** | Rate-limited login with timing-attack-resistant password checks, hardened response headers (CSP, HSTS, Permissions-Policy), CRLF-safe email headers, scheme-restricted outbound links, non-root container |
 | **Ops** | Docker Compose (app + Postgres + Redis reserved for later), unit tests across rules/connectors/routes/security, zero frontend build (vanilla JS, no Node/webpack) |
 
+## Screenshot
+
+### Dashboard
+
+![dashboard](/docs/img/dashboard.png)
+
+### CVEs
+
+![cves](/docs/img/cve.png)
+
+### CVE details
+
+![cve_detail](/docs/img/cve2.png)
+
+### PoC Radar
+
+![poc_radar](/docs/img/poc_radar.png)
+
+### Watchlist
+
+![watchlist](/docs/img/watchlist.png)
+
+### Settings
+
+![settings](/docs/img/settings.png)
+
 ## Quickstart
 
 ### Docker Compose (recommended)
