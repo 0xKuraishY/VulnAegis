@@ -1,0 +1,19 @@
+# Liste blanche des assets à surveiller en priorité.
+# - vendor/product: filtré sur le vendeur/produit détecté dans la CVE (NVD CPE, écosystème GitHub/OSV...)
+# - keyword: recherché dans la description ou le vendor/product (utile pour "Log4j", "Zero-Day", etc.)
+# Modifiable à chaud ensuite via l'API: GET/POST/DELETE /api/watchlist
+
+- vendor: microsoft
+  product: windows
+  note: "Postes de travail du parc"
+
+- vendor: apache
+  product: log4j
+  note: "Dépendance transverse critique"
+
+- vendor: cisco
+  note: "Équipements réseau du datacenter"
+
+- keyword: log4j
+
+- keyword: zero-day

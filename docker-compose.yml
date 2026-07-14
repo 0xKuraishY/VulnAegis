@@ -1,0 +1,52 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      # POSTGRES_PASSWORD ci-dessous a une valeur par défaut pour que `docker compose up` marche
+      # sans configuration en local/dev - à surcharger via .env (POSTGRES_PASSWORD=...) pour
+      # tout déploiement au-delà d'un poste de dev, le mot de passe par défaut étant public
+      # (visible dans ce fichier).
+      DATABASE_URL: postgresql://vulnaegis:${POSTGRES_PASSWORD:-vulnaegis}@postgres:5432/vulnaegis
+      POLL_INTERVAL_MINUTES: ${POLL_INTERVAL_MINUTES:-10}
+      NVD_API_KEY: ${NVD_API_KEY:-}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
+      GENERIC_WEBHOOK_URL: ${GENERIC_WEBHOOK_URL:-}
+    volumes:
+      - ./watchlist.yaml:/app/watchlist.yaml:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: vulnaegis
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vulnaegis}
+      POSTGRES_DB: vulnaegis
+    # Pas de `ports:` ici : Postgres n'a besoin d'être joignable que par le service `app` sur le
+    # réseau interne Compose, jamais depuis l'hôte/Internet.
+    volumes:
+      - vulnaegis_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vulnaegis"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Redis: prévu pour le cache de requêtes (dashboard/API) et comme broker pour une
+  # future file de tâches (Celery/RQ) lors du passage à l'échelle -- voir docs/SCALING.md.
+  # Non consommé par le code du MVP, inclus pour un chemin de montée en charge sans
+  # changement d'infra.
+  redis:
+    image: redis:7-alpine
+    # Pas de `ports:` : Redis n'a ni auth ni TLS par défaut, et rien dans le code ne s'y connecte
+    # encore - l'exposer sur l'hôte serait une instance non authentifiée accessible depuis
+    # l'extérieur pour aucun bénéfice actuel. Le service `app` pourra le joindre via le réseau
+    # interne Compose (redis:6379) le jour où il sera effectivement consommé.
+
+volumes:
+  vulnaegis_pgdata:
