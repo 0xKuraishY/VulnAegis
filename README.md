@@ -31,6 +31,7 @@ that's actually needed (`docs/SCALING.md`).
 
 - [How it works](#how-it-works)
 - [Features](#features)
+- [Screenshot](#screenshot)
 - [Quickstart](#quickstart)
 - [The ingestion pipeline](#the-ingestion-pipeline)
 - [Data sources](#data-sources)
@@ -142,6 +143,10 @@ to give the analyst an up-to-date view.
 ### Settings
 
 ![settings](/docs/img/settings.png)
+
+### Darkmode
+
+![darkmode](/docs/img/darkmode.png)
 
 ## Quickstart
 
